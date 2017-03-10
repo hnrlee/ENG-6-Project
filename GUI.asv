@@ -55,7 +55,7 @@ function GUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for GUI
 handles.output = hObject;
 
-% THIS IS WHERE YOU PUT THE CODE************
+% THIS IS WHERE YOU PUT THE CODE
 handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
 
 
@@ -86,15 +86,6 @@ function videoScrubber_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
-function videoScrubberContValCallback(hFigure, eventdata)
-
-handles = guidata(hFigure);
-
-% HEY LOOK HERE
-% HEY LOOK HERE
-% use get(handles.videoScruber, 'Value') to get slider position from 0 to
-% 1, multiply by number of frames in video to get the desired frame.
-fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
 
 % --- Executes during object creation, after setting all properties.
 function videoScrubber_CreateFcn(hObject, eventdata, handles)
