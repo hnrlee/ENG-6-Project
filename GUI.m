@@ -1,3 +1,4 @@
+
 function varargout = GUI(varargin)
 % GUI MATLAB code for GUI.fig
 %      GUI, by itself, creates a new GUI or raises the existing
@@ -22,7 +23,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 09-Mar-2017 15:23:31
+% Last Modified by GUIDE v2.5 14-Mar-2017 15:46:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,8 +58,10 @@ handles.output = hObject;
 
 % THIS IS WHERE YOU PUT THE CODE************
 handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
-
-
+v = VideoReader('sampleVideo.mp4');
+video = readFrame(v);
+imshow(video, 'Parent', handles.videoFrame);
+drawnow;
 % Update handles structure
 guidata(hObject, handles);
 
@@ -92,6 +95,7 @@ handles = guidata(hFigure);
 
 % HEY LOOK HERE
 % HEY LOOK HERE
+
 % use get(handles.videoScruber, 'Value') to get slider position from 0 to
 % 1, multiply by number of frames in video to get the desired frame.
 fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
@@ -113,6 +117,13 @@ function playPauseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to playPauseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+v = VideoReader('sampleVideo.mp4');
+while hasFrame(v)
+    video = readFrame(v);
+    imshow(video, 'Parent', handles.videoFrame);
+    drawnow;
+end
+
 
 
 % --- Executes on button press in stopButton.
@@ -134,3 +145,13 @@ function forwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to forwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function videoFrame_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to videoFrame (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate videoFrame
+
