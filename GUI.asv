@@ -64,13 +64,12 @@ video = VideoReader('sampleVideo.mp4');
 handles.currentFrame = readFrame(video);
 handles.videoResolution = [video.Width, video.Height];
 handles.videoFrames = [handles.currentFrame];
-i = 2;
+i
 while hasFrame(video)
     tempFrame = readFrame(video);
-    handles.videoFrames(:,:,:,i) = tempFrame;
-    i = i + 1
+    handles.videoFrames = [handles.videoFrames, tempFrame];
+    guidata(hObject, handles);
 end
-handles.totalFrames = i;
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
 % Update handles structure
@@ -128,9 +127,9 @@ function playPauseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to playPauseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.currentFrameNumber = 1;
-for i = 1:handles.totalFrames
-   handles.currentFrame = handles.videoFrames(:,:,:,i);
+[r, c] = size(handles.videoStruct(1))
+for i = 1:length(handles.videoStruct)
+   handles.currentFrame = handles.videoFrames(i);
    guidata(hObject, handles);
    imshow(handles.currentFrame, 'Parent', handles.videoFrame);
    drawnow;
