@@ -68,11 +68,16 @@ i = 2;
 while hasFrame(video)
     tempFrame = readFrame(video);
     handles.videoFrames(:,:,:,i) = tempFrame;
-    i = i + 1
+    i = i + 1;
+    fprintf('Processing frame %.0f\n', i);
 end
+fprintf('Done processing video!\n');
 handles.totalFrames = i;
+set(handles.resolutionText, 'Value', handles.videoResolution);
+fprintf('Resolution: %d X %d\nFrames: %d\n', handles.videoResolution(1), handles.videoResolution(2), handles.totalFrames);
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
+handles.currentFrameNumber = 1;
 % Update handles structure
 guidata(hObject, handles);
 
@@ -104,12 +109,11 @@ function videoScrubberContValCallback(hFigure, eventdata)
 
 handles = guidata(hFigure);
 
-% HEY LOOK HERE
-% HEY LOOK HERE
-
 % use get(handles.videoScruber, 'Value') to get slider position from 0 to
 % 1, multiply by number of frames in video to get the desired frame.
 fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
+scrubberValue = get(handles.videoScrubber, 'Value');
+handles.currentFrameNumber = floor(handles.totalFrames * scrubberValue);
 
 % --- Executes during object creation, after setting all properties.
 function videoScrubber_CreateFcn(hObject, eventdata, handles)
@@ -128,9 +132,11 @@ function playPauseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to playPauseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.currentFrameNumber = 1;
-for i = 1:handles.totalFrames
-   handles.currentFrame = handles.videoFrames(:,:,:,i);
+
+while handles.currentFrameNumber < handles.totalFrames
+   handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+   handles.currentFrameNumber = handles.currentFrameNumber + 1;
+   
    guidata(hObject, handles);
    imshow(handles.currentFrame, 'Parent', handles.videoFrame);
    drawnow;
