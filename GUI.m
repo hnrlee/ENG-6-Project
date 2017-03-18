@@ -169,13 +169,11 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-        break;
     elseif handles.isPauseButton == true
         handles.isPauseButton = false;
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
-        break;
         break;
     elseif handles.isNextFrameButton == true
         handles.currentFrameNumber = handles.currentFrameNumber + 1;
@@ -185,7 +183,6 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-        break;
     elseif handles.isBackFrameButton == true
         handles.currentFrameNumber = handles.currentFrameNumber - 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
@@ -193,7 +190,6 @@ while handles.currentFrameNumber < handles.totalFrames
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
-        break;
         break;
     elseif handles.isSliderMoved == true
         handles.currentFrameNumber = ceil(handles.currentFrameNumber * handles.scrubberValue);
