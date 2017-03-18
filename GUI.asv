@@ -95,6 +95,7 @@ set(handles.resolutionText, 'String', handles.resolutionString);
 set(handles.fpsText, 'String', strcat(num2str(round(handles.fps)), ' fps'));
 set(handles.durationText, 'String', strcat(num2str(ceil(handles.videoDuration)), ' sec'));
 set(handles.videoTitleText, 'String', handles.videoTitle);
+set(handles.videoFrame, 'UserData', handles.currentFrame);
 % set first frame into video frame in GUI
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
@@ -133,6 +134,15 @@ function videoScrubber_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
+handles.scrubberValue = get(handles.videoScrubber, 'Value');
+set(handles.videoScrubber, 'UserData', 'true');
+handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+set(handles.videoScrubber, 'UserData', 'false');
+guidata(hObject, handles);
+imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+drawnow;
+guidata(hObject, handles);
 
 function videoScrubberContValCallback(hFigure, eventdata)
 
@@ -140,10 +150,7 @@ handles = guidata(hFigure);
 
 % use get(handles.videoScruber, 'Value') to get slider position from 0 to
 % 1, multiply by number of frames in video to get the desired frame.
-fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
-handles.scrubberValue = get(handles.videoScrubber, 'Value');
-set(handles.videoScrubber, 'UserData', 'true');
-guidata(hObject, handles);
+
 
 % --- Executes during object creation, after setting all properties.
 function videoScrubber_CreateFcn(hObject, eventdata, handles)
@@ -155,6 +162,9 @@ function videoScrubber_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+set(hObject, 'Min', 1);
+set(hObject, 'Max', handles.totalFrames);
+set(hObject, 'Value', 1);
 
 
 % --- Executes on button press in playButton.
@@ -165,28 +175,32 @@ function playButton_Callback(hObject, eventdata, handles)
 
 while handles.currentFrameNumber < handles.totalFrames
     guidata(hObject, handles);
+    % if stop button pressed
     if strcmp(get(handles.stopButton, 'UserData'), 'true')
-        handles.currentFrame = handles.videoFrames(:,:,:,1);
-        handles.currentFrameNumber = 1;
+        set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,1));
+        set(handles.videoSrubber, 'Value', 1);
         set(handles.stopButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+        % if pause button pressed
     elseif strcmp(get(handles.pauseButton, 'UserData'), 'true')
         set(handles.pauseButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+        % if next button pressed
     elseif strcmp(get(handles.forwardButton, 'UserData'), 'true')
-        handles.currentFrameNumber = handles.currentFrameNumber + 1;
+        set(handles.videoSrubber, 'Value', get(handles.videoScrubber, 'Value') + 1);
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
         set(handles.forwardButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+        % if back button pressed
     elseif strcmp(get(handles.backButton, 'UserData'), 'true')
         handles.currentFrameNumber = handles.currentFrameNumber - 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
@@ -195,13 +209,10 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+        % if video scrubber position changed
     elseif strcmp(get(handles.videoScrubber, 'UserData'), 'true')
-        handles.currentFrameNumber = ceil(handles.currentFrameNumber * get(handles.videoScrubber, 'Value'));
-        handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
-        set(handles.videoScrubber, 'UserData', 'false');
-        guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
-        drawnow;
+        
+        break;
     else
         tic;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
@@ -211,7 +222,8 @@ while handles.currentFrameNumber < handles.totalFrames
         drawnow;
         delta = toc;
         pause((1/handles.fps) - delta);
-        
+        set(handles.videoScrubber, 'Value', handles.currentFrameNumber / handles.totalFrames);
+        guidata(hObject, handles);
     end
     guidata(hObject, handles);
 end
