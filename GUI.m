@@ -108,6 +108,11 @@ handles.isPauseButton = false;
 handles.isSliderMoved = false;
 
 handles.currentFrameNumber = 1;
+
+handles.firstFrame = 1;
+set(handles.videoScrubber, 'Min', handles.firstFrame);
+set(handles.videoScrubber, 'Max', handles.totalFrames);
+set(handles.videoScrubber, 'Value', 1);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -160,9 +165,8 @@ function videoScrubber_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-set(hObject, 'Min', 1);
-set(hObject, 'Max', handles.totalFrames);
-set(hObject, 'Value', 1);
+
+guidata(hObject, handles);
 
 
 % --- Executes on button press in playButton.
@@ -179,32 +183,35 @@ while handles.currentFrameNumber < handles.totalFrames
         set(handles.videoSrubber, 'Value', 1);
         set(handles.stopButton, 'UserData', 'false');
         guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
         break;
         % if pause button pressed
     elseif strcmp(get(handles.pauseButton, 'UserData'), 'true')
         set(handles.pauseButton, 'UserData', 'false');
         guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
         break;
         % if next button pressed
-    elseif strcmp(get(handles.forwardButton, 'UserData'), 'true')
-        set(handles.videoSrubber, 'Value', get(handles.videoScrubber, 'Value') + 1);
-        handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+    elseif strcmp(get(handles.forwardButton, 'UserData'), 'true') && get(handles.videoScrubber, 'Value') < handles.totalFrames
+        set(handles.videoSrubber, 'Value', round(get(handles.videoScrubber, 'Value')) + 1);
+        % handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+        set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,get(handles.videoScrubber, 'Value')));
         set(handles.forwardButton, 'UserData', 'false');
         guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
         break;
         % if back button pressed
-    elseif strcmp(get(handles.backButton, 'UserData'), 'true')
-        handles.currentFrameNumber = handles.currentFrameNumber - 1;
-        handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+    elseif strcmp(get(handles.backButton, 'UserData'), 'true') && get(handles.videoScrubber, 'Value') > 1
+        % handles.currentFrameNumber = handles.currentFrameNumber - 1;
+        set(handles.videoSrubber, 'Value', round(get(handles.videoScrubber, 'Value')) - 1);
+        % handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+        set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,get(handles.videoScrubber, 'Value')));
         set(handles.backButton, 'UserData', 'false');
         guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
         break;
         % if video scrubber position changed
@@ -214,14 +221,14 @@ while handles.currentFrameNumber < handles.totalFrames
         break;
     else
         tic;
-        handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
-        handles.currentFrameNumber = handles.currentFrameNumber + 1;
+        set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,get(handles.videoScrubber, 'Value')));
+        % handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
+        set(handles.videoScrubber, 'Value', get(handles.videoScrubber, 'Value') + 1);
         guidata(hObject, handles);
-        imshow(handles.currentFrame, 'Parent', handles.videoFrame);
+        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
         delta = toc;
         pause((1/handles.fps) - delta);
-        set(handles.videoScrubber, 'Value', handles.currentFrameNumber / handles.totalFrames);
         guidata(hObject, handles);
     end
     guidata(hObject, handles);
