@@ -211,8 +211,7 @@ while handles.currentFrameNumber < handles.totalFrames
         drawnow;
         delta = toc;
         pause((1/handles.fps) - delta);
-        set(handles.videoScrubber, 'Value', handles.currentFrameNumber / handles.totalFrames);
-        guidata(hObject, handles);
+        
     end
     guidata(hObject, handles);
 end
