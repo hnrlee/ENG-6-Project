@@ -173,22 +173,13 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-<<<<<<< HEAD
-    elseif handles.isPauseButton == true
-        handles.isPauseButton = false;
-=======
     elseif strcmp(get(handles.pauseButton, 'UserData'), 'true')
         set(handles.pauseButton, 'UserData', 'false');
->>>>>>> origin/master
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-<<<<<<< HEAD
-    elseif handles.isNextFrameButton == true
-=======
     elseif strcmp(get(handles.forwardButton, 'UserData'), 'true')
->>>>>>> origin/master
         handles.currentFrameNumber = handles.currentFrameNumber + 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
         set(handles.forwardButton, 'UserData', 'false');
@@ -196,11 +187,7 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-<<<<<<< HEAD
-    elseif handles.isBackFrameButton == true
-=======
     elseif strcmp(get(handles.backButton, 'UserData'), 'true')
->>>>>>> origin/master
         handles.currentFrameNumber = handles.currentFrameNumber - 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
         set(handles.backButton, 'UserData', 'false');
@@ -208,13 +195,8 @@ while handles.currentFrameNumber < handles.totalFrames
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
-<<<<<<< HEAD
-    elseif handles.isSliderMoved == true
-        handles.currentFrameNumber = ceil(handles.currentFrameNumber * handles.scrubberValue);
-=======
     elseif strcmp(get(handles.videoScrubber, 'UserData'), 'true')
         handles.currentFrameNumber = ceil(handles.currentFrameNumber * get(handles.videoScrubber, 'Value'));
->>>>>>> origin/master
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
         set(handles.videoScrubber, 'UserData', 'false');
         guidata(hObject, handles);
