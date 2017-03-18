@@ -57,20 +57,22 @@ function GUI_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 % THIS IS WHERE YOU PUT THE CODE************
-
+[FileName, PathName, FilterIndex] = uigetfile('*.mp4', 'Select the video file you want to play.');
+videoFileName = strcat(PathName, FileName);
 % used for getting slider data
 handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
 
 % load video
-video = VideoReader('sampleVideo.mp4');
+video = VideoReader(videoFileName);
 % gets info about video file
+handles.videoTitle = FileName;
 handles.videoHeight = video.Height;
 handles.videoWidth = video.Width;
 handles.fps = video.FrameRate;
 handles.videoDuration = video.Duration;
 handles.totalFrames = video.NumberOfFrames;
 
-video = VideoReader('sampleVideo.mp4');
+video = VideoReader(videoFileName);
 % gets first frame of video
 handles.currentFrame = readFrame(video);
 
@@ -90,8 +92,9 @@ fprintf('Done processing video!\n');
 % sets text boxes in the GUI
 handles.resolutionString = [num2str(handles.videoWidth), ' X ' , num2str(handles.videoHeight)];
 set(handles.resolutionText, 'String', handles.resolutionString);
-set(handles.fpsText, 'String', [num2str(handles.fps), ' fps']);
-set(handles.durationText, 'String', handles.videoDuration);
+set(handles.fpsText, 'String', strcat(num2str(round(handles.fps)), ' fps'));
+set(handles.durationText, 'String', strcat(num2str(ceil(handles.videoDuration)), ' sec'));
+set(handles.videoTitleText, 'String', handles.videoTitle);
 % set first frame into video frame in GUI
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
