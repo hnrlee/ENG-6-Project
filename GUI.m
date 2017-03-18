@@ -57,20 +57,22 @@ function GUI_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 % THIS IS WHERE YOU PUT THE CODE************
-
+[FileName, PathName, FilterIndex] = uigetfile('*.mp4', 'Select the video file you want to play.');
+videoFileName = strcat(PathName, FileName);
 % used for getting slider data
 handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
 
 % load video
-video = VideoReader('sampleVideo.mp4');
+video = VideoReader(videoFileName);
 % gets info about video file
+handles.videoTitle = FileName;
 handles.videoHeight = video.Height;
 handles.videoWidth = video.Width;
 handles.fps = video.FrameRate;
 handles.videoDuration = video.Duration;
 handles.totalFrames = video.NumberOfFrames;
 
-video = VideoReader('sampleVideo.mp4');
+video = VideoReader(videoFileName);
 % gets first frame of video
 handles.currentFrame = readFrame(video);
 
@@ -90,8 +92,9 @@ fprintf('Done processing video!\n');
 % sets text boxes in the GUI
 handles.resolutionString = [num2str(handles.videoWidth), ' X ' , num2str(handles.videoHeight)];
 set(handles.resolutionText, 'String', handles.resolutionString);
-set(handles.fpsText, 'String', handles.fps);
-set(handles.durationText, 'String', handles.videoDuration);
+set(handles.fpsText, 'String', strcat(num2str(round(handles.fps)), ' fps'));
+set(handles.durationText, 'String', strcat(num2str(ceil(handles.videoDuration)), ' sec'));
+set(handles.videoTitleText, 'String', handles.videoTitle);
 % set first frame into video frame in GUI
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
@@ -139,7 +142,7 @@ handles = guidata(hFigure);
 % 1, multiply by number of frames in video to get the desired frame.
 fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
 handles.scrubberValue = get(handles.videoScrubber, 'Value');
-handles.isSliderMoved = true;
+set(handles.videoScrubber, 'UserData', 'true');
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -161,40 +164,59 @@ function playButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 while handles.currentFrameNumber < handles.totalFrames
-    if handles.isStopButton == true
+    guidata(hObject, handles);
+    if strcmp(get(handles.stopButton, 'UserData'), 'true')
         handles.currentFrame = handles.videoFrames(:,:,:,1);
         handles.currentFrameNumber = 1;
-        handles.isStopButton = false;
+        set(handles.stopButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+<<<<<<< HEAD
     elseif handles.isPauseButton == true
         handles.isPauseButton = false;
+=======
+    elseif strcmp(get(handles.pauseButton, 'UserData'), 'true')
+        set(handles.pauseButton, 'UserData', 'false');
+>>>>>>> origin/master
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+<<<<<<< HEAD
     elseif handles.isNextFrameButton == true
+=======
+    elseif strcmp(get(handles.forwardButton, 'UserData'), 'true')
+>>>>>>> origin/master
         handles.currentFrameNumber = handles.currentFrameNumber + 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
-        handles.isNextFrameButton = false;
+        set(handles.forwardButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+<<<<<<< HEAD
     elseif handles.isBackFrameButton == true
+=======
+    elseif strcmp(get(handles.backButton, 'UserData'), 'true')
+>>>>>>> origin/master
         handles.currentFrameNumber = handles.currentFrameNumber - 1;
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
-        handles.isBackFrameButton = false;
+        set(handles.backButton, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
         break;
+<<<<<<< HEAD
     elseif handles.isSliderMoved == true
         handles.currentFrameNumber = ceil(handles.currentFrameNumber * handles.scrubberValue);
+=======
+    elseif strcmp(get(handles.videoScrubber, 'UserData'), 'true')
+        handles.currentFrameNumber = ceil(handles.currentFrameNumber * get(handles.videoScrubber, 'Value'));
+>>>>>>> origin/master
         handles.currentFrame = handles.videoFrames(:,:,:,handles.currentFrameNumber);
-        handles.isSliderMoved = false;
+        set(handles.videoScrubber, 'UserData', 'false');
         guidata(hObject, handles);
         imshow(handles.currentFrame, 'Parent', handles.videoFrame);
         drawnow;
@@ -208,6 +230,7 @@ while handles.currentFrameNumber < handles.totalFrames
         delta = toc;
         pause((1/handles.fps) - delta);
     end
+    guidata(hObject, handles);
 end
 
 guidata(hObject, handles);
@@ -219,7 +242,7 @@ function stopButton_Callback(hObject, eventdata, handles)
 % hObject    handle to stopButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.isStopButton = true;
+set(handles.stopButton, 'UserData', 'true');
 guidata(hObject, handles);
 
 % --- Executes on button press in backButton.
@@ -227,7 +250,7 @@ function backButton_Callback(hObject, eventdata, handles)
 % hObject    handle to backButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.isBackFrameButton = true;
+set(handles.backButton, 'UserData', 'true');
 guidata(hObject, handles);
 
 
@@ -236,7 +259,7 @@ function forwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to forwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.isNextFrameButton = true;
+set(handles.forwardButton, 'UserData', 'true');
 guidata(hObject, handles);
 
 
@@ -253,6 +276,5 @@ function pauseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to pauseButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.isPauseButton = true;
-fprintf('test\n');
+set(handles.pauseButton, 'UserData', 'true');
 guidata(hObject, handles);
