@@ -23,7 +23,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 17-Mar-2017 22:13:09
+% Last Modified by GUIDE v2.5 18-Mar-2017 20:55:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -148,8 +148,6 @@ guidata(hObject, handles);
 function videoScrubberContValCallback(hFigure, eventdata)
 handles = guidata(hFigure);
 
-
-
 % --- Executes during object creation, after setting all properties.
 function videoScrubber_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to videoScrubber (see GCBO)
@@ -171,7 +169,6 @@ function playButton_Callback(hObject, eventdata, handles)
 
 while handles.currentFrameNumber < handles.totalFrames
     guidata(hObject, handles);
-    
     % if STOP BUTTON pressed
     if strcmp(get(handles.stopButton, 'UserData'), 'true')
         set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,1));
@@ -229,6 +226,9 @@ while handles.currentFrameNumber < handles.totalFrames
     pause((1/handles.fps) - delta);
     guidata(hObject, handles);
     
+    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
+    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
+    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
     %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -305,3 +305,131 @@ function pauseButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.pauseButton, 'UserData', 'true');
 guidata(hObject, handles);
+
+
+% --- Executes on slider movement.
+function red_slider_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
+    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
+    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+       %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
+guidata(hObject, handles);
+    
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function red_slider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function green_slider_Callback(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
+    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
+    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+       %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
+guidata(hObject, handles);
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function green_slider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function blue_slider_Callback(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
+    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
+    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+       %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
+guidata(hObject, handles);
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function blue_slider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
