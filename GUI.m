@@ -246,8 +246,6 @@ while handles.currentFrameNumber < handles.totalFrames
         guidata(hObject, handles);
         set(handles.videoScrubber, 'Value', round(get(handles.videoScrubber, 'Value')) + 1);
         guidata(hObject, handles);
-        imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
-        drawnow;
     end
     drawnow;
     delta = toc;
@@ -255,6 +253,7 @@ while handles.currentFrameNumber < handles.totalFrames
     guidata(hObject, handles);
     set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
     tempFrame = get(handles.videoFrame, 'UserData');
+    
     tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
     tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
     tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
@@ -262,25 +261,25 @@ while handles.currentFrameNumber < handles.totalFrames
     imshow(tempFrame, 'Parent', handles.videoFrame);
     drawnow;
     %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
-Red = imageData(:,:,1);
-Green = imageData(:,:,2);
-Blue = imageData(:,:,3);
+    imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));
+    Red = imageData(:,:,1);
+    Green = imageData(:,:,2);
+    Blue = imageData(:,:,3);
  
-[yRed, x] = imhist(Red);
-[yGreen, x] = imhist(Green);
-[yBlue, x] = imhist(Blue);
+    [yRed, x] = imhist(Red);
+    [yGreen, x] = imhist(Green);
+    [yBlue, x] = imhist(Blue);
  
-%Plot Histogram
-axes(handles.rgbHistogram);
-cla(handles.rgbHistogram);
-hold on
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-hold off
-drawnow;
+    %Plot Histogram
+    axes(handles.rgbHistogram);
+    cla(handles.rgbHistogram);
+    hold on
+    plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+    hold off
+    drawnow;
 end
 
-guidata(hObject, handles);
+    guidata(hObject, handles);
 
 
 
@@ -302,9 +301,6 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     set(handles.videoScrubber, 'Value', round(round(get(handles.videoScrubber, 'Value'))) - 1);
     set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
     guidata(hObject, handles);
-    imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
-    drawnow;
-    guidata(hObject, handles);
     set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
     tempFrame = get(handles.videoFrame, 'UserData');
     tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
@@ -314,7 +310,7 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     imshow(tempFrame, 'Parent', handles.videoFrame);
     drawnow;
                             %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));
 Red = imageData(:,:,1);
 Green = imageData(:,:,2);
 Blue = imageData(:,:,3);
@@ -343,11 +339,8 @@ if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     set(handles.videoScrubber, 'Value', round(round(get(handles.videoScrubber, 'Value'))) + 1);
     set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
     guidata(hObject, handles);
-    imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
-    drawnow;
-    guidata(hObject, handles);
     set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
-  tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame = get(handles.videoFrame, 'UserData');
     tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
     tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
     tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
@@ -404,7 +397,7 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
     imshow(tempFrame, 'Parent', handles.videoFrame);
     drawnow;
        %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));
 Red = imageData(:,:,1);
 Green = imageData(:,:,2);
 Blue = imageData(:,:,3);
@@ -453,7 +446,7 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
     imshow(tempFrame, 'Parent', handles.videoFrame);
     drawnow;
        %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));
 Red = imageData(:,:,1);
 Green = imageData(:,:,2);
 Blue = imageData(:,:,3);
@@ -501,7 +494,7 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
     imshow(tempFrame, 'Parent', handles.videoFrame);
     drawnow;
        %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));
 Red = imageData(:,:,1);
 Green = imageData(:,:,2);
 Blue = imageData(:,:,3);
