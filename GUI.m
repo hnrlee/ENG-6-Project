@@ -111,7 +111,7 @@ handles.currentFrameNumber = 1;
 
 handles.firstFrame = 1;
 set(handles.videoScrubber, 'Min', handles.firstFrame);
-set(handles.videoScrubber, 'Max', handles.totalFrames);
+set(handles.videoScrubber, 'Max', handles.totalFrames + 1);
 set(handles.videoScrubber, 'Value', 1);
 % Update handles structure
 guidata(hObject, handles);
@@ -229,6 +229,22 @@ while handles.currentFrameNumber < handles.totalFrames
     pause((1/handles.fps) - delta);
     guidata(hObject, handles);
     
+    %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
 end
 
 guidata(hObject, handles);

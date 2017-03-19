@@ -23,11 +23,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-<<<<<<< HEAD
-% Last Modified by GUIDE v2.5 14-Mar-2017 15:46:28
-=======
 % Last Modified by GUIDE v2.5 17-Mar-2017 22:13:09
->>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,27 +57,10 @@ function GUI_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 % THIS IS WHERE YOU PUT THE CODE************
-<<<<<<< HEAD
-handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
-
-% draws first frame on gui
-video = VideoReader('sampleVideo.mp4');
-handles.currentFrame = readFrame(video);
-handles.videoResolution = [video.Width, video.Height];
-handles.videoFrames = [handles.currentFrame];
-i
-while hasFrame(video)
-    tempFrame = readFrame(video);
-    handles.videoFrames = [handles.videoFrames, tempFrame];
-    guidata(hObject, handles);
-end
-imshow(handles.currentFrame, 'Parent', handles.videoFrame);
-drawnow;
-=======
 [FileName, PathName, FilterIndex] = uigetfile('*.mp4', 'Select the video file you want to play.');
 videoFileName = strcat(PathName, FileName);
 % used for getting slider data
-% handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
+handles.sliderListener = addlistener(handles.videoScrubber, 'ContinuousValueChange', @(hFigure, eventdata) videoScrubberContValCallback(hObject, eventdata));
 
 % load video
 video = VideoReader(videoFileName);
@@ -134,7 +113,6 @@ handles.firstFrame = 1;
 set(handles.videoScrubber, 'Min', handles.firstFrame);
 set(handles.videoScrubber, 'Max', handles.totalFrames);
 set(handles.videoScrubber, 'Value', 1);
->>>>>>> origin/master
 % Update handles structure
 guidata(hObject, handles);
 
@@ -158,35 +136,19 @@ function videoScrubber_Callback(hObject, eventdata, handles)
 % hObject    handle to videoScrubber (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-<<<<<<< HEAD
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
-=======
-fprintf('test\n');
 set(handles.videoScrubber, 'UserData', 'true');
 set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
+drawnow;
 guidata(hObject, handles);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
 
->>>>>>> origin/master
 function videoScrubberContValCallback(hFigure, eventdata)
-
 handles = guidata(hFigure);
 
-<<<<<<< HEAD
-% HEY LOOK HERE
-% HEY LOOK HERE
 
-% use get(handles.videoScruber, 'Value') to get slider position from 0 to
-% 1, multiply by number of frames in video to get the desired frame.
-fprintf('slider value: %f\n', get(handles.videoScrubber, 'Value'));
-=======
-
->>>>>>> origin/master
 
 % --- Executes during object creation, after setting all properties.
 function videoScrubber_CreateFcn(hObject, eventdata, handles)
@@ -198,21 +160,6 @@ function videoScrubber_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-<<<<<<< HEAD
-
-
-% --- Executes on button press in playPauseButton.
-function playPauseButton_Callback(hObject, eventdata, handles)
-% hObject    handle to playPauseButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-[r, c] = size(handles.videoStruct(1))
-for i = 1:length(handles.videoStruct)
-   handles.currentFrame = handles.videoFrames(i);
-   guidata(hObject, handles);
-   imshow(handles.currentFrame, 'Parent', handles.videoFrame);
-   drawnow;
-=======
 guidata(hObject, handles);
 
 
@@ -263,8 +210,11 @@ while handles.currentFrameNumber < handles.totalFrames
         % if VIDEO SCRUBBER position changed
     elseif strcmp(get(handles.videoScrubber, 'UserData'), 'true')
         set(handles.videoScrubber, 'UserData', 'false');
+        set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
         imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
+        set(handles.videoScrubber, 'UserData', 'false');
+        guidata(hObject, handles);
     else
         tic;
         set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
@@ -273,12 +223,27 @@ while handles.currentFrameNumber < handles.totalFrames
         guidata(hObject, handles);
         imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
         drawnow;
-        delta = toc;
-        pause((1/handles.fps) - delta);
-        guidata(hObject, handles);
     end
+    drawnow;
+    delta = toc;
+    pause((1/handles.fps) - delta);
     guidata(hObject, handles);
->>>>>>> origin/master
+    
+    %RGB Histogram
+imageData = videoFrames(:,:,:,round(g    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
 end
 
 guidata(hObject, handles);
@@ -290,20 +255,14 @@ function stopButton_Callback(hObject, eventdata, handles)
 % hObject    handle to stopButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-<<<<<<< HEAD
-
-=======
 set(handles.stopButton, 'UserData', 'true');
 guidata(hObject, handles);
->>>>>>> origin/master
 
 % --- Executes on button press in backButton.
 function backButton_Callback(hObject, eventdata, handles)
 % hObject    handle to backButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-<<<<<<< HEAD
-=======
 if round(get(handles.videoScrubber, 'Value')) > 1
     set(handles.backButton, 'UserData', 'true');
     set(handles.videoScrubber, 'Value', round(round(get(handles.videoScrubber, 'Value'))) - 1);
@@ -313,7 +272,6 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     drawnow;
     guidata(hObject, handles);
 end
->>>>>>> origin/master
 
 
 % --- Executes on button press in forwardButton.
@@ -321,9 +279,6 @@ function forwardButton_Callback(hObject, eventdata, handles)
 % hObject    handle to forwardButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-<<<<<<< HEAD
-
-=======
 if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     set(handles.forwardButton, 'UserData', 'true');
     set(handles.videoScrubber, 'Value', round(round(get(handles.videoScrubber, 'Value'))) + 1);
@@ -333,7 +288,6 @@ if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     drawnow;
     guidata(hObject, handles);
 end
->>>>>>> origin/master
 
 % --- Executes during object creation, after setting all properties.
 function videoFrame_CreateFcn(hObject, eventdata, handles)
@@ -343,8 +297,6 @@ function videoFrame_CreateFcn(hObject, eventdata, handles)
 
 % Hint: place code in OpeningFcn to populate videoFrame
 
-<<<<<<< HEAD
-=======
 % --- Executes on button press in pauseButton.
 function pauseButton_Callback(hObject, eventdata, handles)
 % hObject    handle to pauseButton (see GCBO)
@@ -352,4 +304,3 @@ function pauseButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 set(handles.pauseButton, 'UserData', 'true');
 guidata(hObject, handles);
->>>>>>> origin/master
