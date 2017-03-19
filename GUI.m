@@ -141,6 +141,24 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
 imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
 drawnow;
 guidata(hObject, handles);
+
+                    %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+cla(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -241,6 +259,7 @@ Blue = imageData(:,:,3);
  
 %Plot Histogram
 axes(handles.rgbHistogram);
+cla(handles.rgbHistogram);
 hold on
 plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 hold off
@@ -272,6 +291,23 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
+                            %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+cla(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
 end
 
 
@@ -288,6 +324,24 @@ if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
+    
+                        %RGB Histogram
+imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
+Red = imageData(:,:,1);
+Green = imageData(:,:,2);
+Blue = imageData(:,:,3);
+ 
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
+ 
+%Plot Histogram
+axes(handles.rgbHistogram);
+cla(handles.rgbHistogram);
+hold on
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+hold off
+drawnow;
 end
 
 % --- Executes during object creation, after setting all properties.
