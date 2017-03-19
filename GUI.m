@@ -77,7 +77,6 @@ video = VideoReader(videoFileName);
 handles.currentFrame = readFrame(video);
 
 handles.videoFrames = [handles.currentFrame];
-
 % process video frames
 i = 2;
 while hasFrame(video)
@@ -145,7 +144,14 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
 imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
 drawnow;
 guidata(hObject, handles);
-
+set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame)
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
                     %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -247,9 +253,14 @@ while handles.currentFrameNumber < handles.totalFrames
     delta = toc;
     pause((1/handles.fps) - delta);
     guidata(hObject, handles);
-    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
-    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
-    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+    tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
     %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -294,6 +305,14 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
+    set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+    tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
                             %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -327,7 +346,14 @@ if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
-    
+    set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+  tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
                         %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -369,9 +395,14 @@ function red_slider_Callback(hObject, eventdata, handles)
 % hObject    handle to red_slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
-    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
-    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+    tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
        %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -413,9 +444,14 @@ function green_slider_Callback(hObject, eventdata, handles)
 % hObject    handle to green_slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
-    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
-    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+    tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
        %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -456,15 +492,20 @@ function blue_slider_Callback(hObject, eventdata, handles)
 % hObject    handle to blue_slider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
-    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
-    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value'))));
+    tempFrame = get(handles.videoFrame, 'UserData');
+    tempFrame(:,:,1)=tempFrame(:,:,1)*get(handles.red_slider,'Value');
+    tempFrame(:,:,2)=tempFrame(:,:,2)*get(handles.green_slider,'Value');
+    tempFrame(:,:,3)=tempFrame(:,:,3)*get(handles.blue_slider,'Value');
+    set(handles.videoFrame, 'UserData', tempFrame);
+    imshow(tempFrame, 'Parent', handles.videoFrame);
+    drawnow;
        %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
 Green = imageData(:,:,2);
 Blue = imageData(:,:,3);
- 
+
 [yRed, x] = imhist(Red);
 [yGreen, x] = imhist(Green);
 [yBlue, x] = imhist(Blue);
