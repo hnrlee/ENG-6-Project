@@ -23,7 +23,7 @@ function varargout = GUI(varargin)
 
 % Edit the above text to modify the response to help GUI
 
-% Last Modified by GUIDE v2.5 18-Mar-2017 21:27:10
+% Last Modified by GUIDE v2.5 18-Mar-2017 20:55:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -100,6 +100,7 @@ set(handles.red_slider,'Value',1)
 set(handles.green_slider,'Value',1)
 set(handles.blue_slider,'Value',1)
 
+
 % set first frame into video frame in GUI
 imshow(handles.currentFrame, 'Parent', handles.videoFrame);
 drawnow;
@@ -145,24 +146,6 @@ set(handles.videoFrame, 'UserData', handles.videoFrames(:,:,:,round(get(handles.
 imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
 drawnow;
 guidata(hObject, handles);
-
-                    %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
-Red = imageData(:,:,1);
-Green = imageData(:,:,2);
-Blue = imageData(:,:,3);
- 
-[yRed, x] = imhist(Red);
-[yGreen, x] = imhist(Green);
-[yBlue, x] = imhist(Blue);
- 
-%Plot Histogram
-axes(handles.rgbHistogram);
-cla(handles.rgbHistogram);
-hold on
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-hold off
-drawnow;
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -247,6 +230,7 @@ while handles.currentFrameNumber < handles.totalFrames
     delta = toc;
     pause((1/handles.fps) - delta);
     guidata(hObject, handles);
+    
     handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
     handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
     handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
@@ -262,7 +246,6 @@ Blue = imageData(:,:,3);
  
 %Plot Histogram
 axes(handles.rgbHistogram);
-cla(handles.rgbHistogram);
 hold on
 plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 hold off
@@ -294,23 +277,6 @@ if round(get(handles.videoScrubber, 'Value')) > 1
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
-                            %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
-Red = imageData(:,:,1);
-Green = imageData(:,:,2);
-Blue = imageData(:,:,3);
- 
-[yRed, x] = imhist(Red);
-[yGreen, x] = imhist(Green);
-[yBlue, x] = imhist(Blue);
- 
-%Plot Histogram
-axes(handles.rgbHistogram);
-cla(handles.rgbHistogram);
-hold on
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-hold off
-drawnow;
 end
 
 
@@ -327,24 +293,6 @@ if round(get(handles.videoScrubber, 'Value')) < handles.totalFrames
     imshow(get(handles.videoFrame, 'UserData'), 'Parent', handles.videoFrame);
     drawnow;
     guidata(hObject, handles);
-    
-                        %RGB Histogram
-imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
-Red = imageData(:,:,1);
-Green = imageData(:,:,2);
-Blue = imageData(:,:,3);
- 
-[yRed, x] = imhist(Red);
-[yGreen, x] = imhist(Green);
-[yBlue, x] = imhist(Blue);
- 
-%Plot Histogram
-axes(handles.rgbHistogram);
-cla(handles.rgbHistogram);
-hold on
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-hold off
-drawnow;
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -366,7 +314,7 @@ guidata(hObject, handles);
 
 % --- Executes on slider movement.
 function red_slider_Callback(hObject, eventdata, handles)
-% hObject    handle to red_slider (see GCBO)
+% hObject    handle to slider2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
@@ -397,7 +345,7 @@ guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function red_slider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to red_slider (see GCBO)
+% hObject    handle to slider2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -410,12 +358,13 @@ guidata(hObject, handles);
 
 % --- Executes on slider movement.
 function green_slider_Callback(hObject, eventdata, handles)
-% hObject    handle to green_slider (see GCBO)
+% hObject    handle to slider3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
-    handles.currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
-    handles.currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
+currentFrame=get(handles.videoFrame, 'UserData');
+    currentFrame(:,:,1)=currentFrame(:,:,1)*get(handles.red_slider,'Value');
+    currentFrame(:,:,2)=handles.currentFrame(:,:,2)*get(handles.green_slider,'Value');
+    currentFrame(:,:,3)=handles.currentFrame(:,:,3)*get(handles.blue_slider,'Value');
        %RGB Histogram
 imageData = handles.videoFrames(:,:,:,round(get(handles.videoScrubber, 'Value')));    
 Red = imageData(:,:,1);
@@ -440,7 +389,7 @@ guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function green_slider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to green_slider (see GCBO)
+% hObject    handle to slider3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -453,7 +402,7 @@ guidata(hObject, handles);
 
 % --- Executes on slider movement.
 function blue_slider_Callback(hObject, eventdata, handles)
-% hObject    handle to blue_slider (see GCBO)
+% hObject    handle to slider4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     handles.currentFrame(:,:,1)=handles.currentFrame(:,:,1)*get(handles.red_slider,'Value');
@@ -483,7 +432,7 @@ guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function blue_slider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to blue_slider (see GCBO)
+% hObject    handle to slider4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -492,3 +441,4 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 guidata(hObject, handles);
+
